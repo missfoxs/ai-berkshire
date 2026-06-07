@@ -726,3 +726,29 @@ AI芯片（GPU/HBM）
 | 2026-05-29 第四十四轮（10:00扫描） | **2项新信号（前43轮漏录）；生成信号扫描报告** | ①**中国《矿产资源法》实施条例（2026-05-20发布，June 15生效）**：Li Qiang签令，8章79条；关键条款：战略矿产总量控制+境外投资安全审查+5年就地储量强制系统；覆盖钨/稀土/镓/锗等全部战略矿产；将分品种出口许可证管制升级为系统性法律框架；June 15=17天后。对已跟踪S/B+级瓶颈（钨0c、重稀土0c2、镓锗14）均为法律层面叠加强化。来源：[中国政府官网](https://english.www.gov.cn/policies/latestreleases/202605/20/content_WS6a0d7d84c6d00ca5f9a0b209.html) | [彭博](https://www.bloomberg.com/news/articles/2026-05-20/china-set-to-impose-mining-controls-on-some-strategic-minerals)。②**EU首个联合战略矿产储备：钨/稀土/镓入选短名单**（2026-05-20公告）：10国参与，鹿特丹港仓储，意法德工作组主导；需求侧与China MRL供给侧收紧形成双向夹击；无新纯正可投资标的。来源：[SCMP](https://www.scmp.com/news/world/europe/article/3354245/eu-picks-tungsten-rare-earths-gallium-first-critical-mineral-stockpile) | [Mining Weekly](https://www.miningweekly.com/article/eu-shortlists-tungsten-rare-earths-for-first-stockpile-to-curb-china-reliance-2026-05-20)。**状态确认**：WF6进入<3周临界；Almonty CFO Beristain明日就职（June 1）；Chemring H1财报4天后（June 2）；Centrus DOE续约32天（June 30）；所有S/A/B级评级不变。**生成报告：2026-05-29/10-00-信号扫描.md** |
 | 2026-05-30 第六十六轮（17:00扫描） | **1项新信号（漏录追补）；新增条目11d；生成信号扫描报告** | **光刻胶关键溶剂（PGME/PGMEA）双重供应冲击首次记录**：①霍尔木兹封锁（3月起）→石脑油+92%→溶剂原料成本+供应压缩；②日本4/20七.七级地震→TOK Koriyama（全球先进光刻胶25%产能，停产4-6周）+信越Shirakawa（停产4-8周）；Samsung/SK Hynix已收到供应通知；安全库存~6个月→临界期约2026年9-10月；EUV重认证>1年。A级（5红/1黄）。TOK（4186.T）市值$8.7B/P/S~5.2x黄灯标为"预备跟踪"；JSR私有，信越$44B过大；WF6临界窗口Day 5持续无实际中断；Almonty Phase 2投票June 8（9天）；Centrus DOE续约June 30（31天）；所有S/A/B级评级不变（新增11d条目A级），所有watchlist正式标的评级不变。来源：Seoul Economic Daily/Digitimes/The Elec/SCMP/TrendForce/BigGo Finance（6独立来源）。**生成信号扫描报告：2026-05-30/17-00-信号扫描.md** |
 | 2026-05-31 第七十六轮（13:00扫描） | **3项状态更新；生成信号扫描报告** | ①**Kanto Denka NF3双线全面恢复（2026-01-06补录）**：2025-08火灾损坏设施2已于2026-01-06重启，两条NF3产线满产恢复；与Mitsui Chemicals 3月退出结合，Kanto Denka以100%产能成为日本唯一NF3主要供应商；FY2027指引¥95B/+45%在满产基础上逻辑更为稳固；★★★★不变，入场区间¥1,350-1,610，当前¥3,625高估60-90%。来源：[TipRanks NF3 restored](https://www.tipranks.com/news/company-announcements/kanto-denka-restores-full-nitrogen-trifluoride-output-at-shibukawa-plant-after-fatal-fire)；②**CHG Norway扩产成本超支（£145M→£180M，+24%）**：Chemring Nobel Asker工厂275%扩产总成本+£35M；公司维持FY2026全年运营业绩展望不变；EU ASAP €66.7M资助可覆盖部分超支；不改变瓶颈逻辑，★★★★不变。来源：[Chemring Norway costs - Investing.com](https://uk.investing.com/news/analyst-ratings/chemring-shares-fall-as-norway-expansion-costs-rise-4407850)；③**氦气危机条目0a状态确认（已跟踪，无变化）**：Samsung/SK自保成功（4月美国长期合同），整体行业成本+10-30%，其余晶圆厂6个月库存临界约2026年9月，S级维持；无可投资小市值标的确认。所有S/A/B级瓶颈评级不变，所有watchlist标的评级不变。**生成信号扫描报告：2026-05-31/13-00-信号扫描.md** |
+
+---
+
+## 【2026-06-07 10:00 第十五轮扫描 — 多信号更新】
+
+### 瓶颈状态变化
+
+**无新增/降级/解除瓶颈**（所有已识别S/A级瓶颈持续）
+
+### 新增重要信息
+
+**CHG（弹药/NC，S级）**：H1 2026财报（6月2日）。Energetics段收入+9%、经营利润+32%——瓶颈论点原点确认。整体利润因S&I段压缩和扩产资本开支跌8%，与弹药业务无关。股价跌5%至497.80p。芝加哥项目完工，苏格兰调试中，2028年贡献£1亿增量。P/S 2.74x绿灯。**建议执行深入研究。**
+
+**4047（WF₆，S级）**：FY2027公司指引确认：营收¥950亿（+45%）、经常利润¥100亿（+51%）。Forward P/S 2.19x、Forward P/E 20.79x，双绿灯确认。+111%月涨幅后估值仍合理。10年25xPE退出约8%CAGR（边界合格）。**建议执行深入研究。**
+
+**变压器瓶颈（升级）**：美国~12GW数据中心容量延迟/取消，交期4年。GEV/Hitachi Energy/ETN是主要受益者，均为大市值（已充分定价）。无小市值入场机会，但此瓶颈进一步强化数据中心延迟风险。
+
+**InP衬底（持续）**：供应缺口>70%持续。AXT（AXTI）P/S 84x，估值陷阱维持。
+
+**CoWoS（持续）**：TSMC主席6月5日警告"AI芯片短缺持续数年"。CoWoS售罄至2027，交期52-78周。
+
+**LEU（Centrus）**：2026年1月 DOE授予$9亿商业规模HALEU任务令，$39亿积压至2040。June 30 Phase III到期影响大幅下降。★★★升级潜力。
+
+**ALM（Almonty）**：$7亿可转债（2.25%，2031年到期）6月4日定价，6月9日结算（明天）。转换价$27.40，封顶价$41.36。Phase 2资金来源确认。股价after-hours -12%。
+
+| 2026-06-07 10:00 | **第十五轮扫描 — CHG H1确认+4047双绿灯** | 覆盖五大超级趋势；CHG Energetics +32%验证弹药瓶颈，股价跌5%=战术入场信号；4047 Forward P/S 2.19x/P/E 20.79x双绿灯，+111%后估值仍合理；变压器瓶颈升级（12GW延迟，4年交期）；Almonty $700M可转债（6月9日结算）；Centrus $9亿DOE商业规模合同已确认；Nittobo ¥20,250（ATH-38.5%），估值仍黄灯；生成报告 2026-06-07/10-00-CHG-4047.md |
