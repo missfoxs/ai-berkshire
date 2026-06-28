@@ -6,9 +6,9 @@ English | [中文](README.md)
 >
 > Redefining the depth and efficiency of investment research with AI.
 
-**AI Berkshire** is a collection of investment research skills built on [Claude Code](https://claude.ai/code). It systematizes the methodologies of four value investing masters — Buffett, Munger, Duan Yongping, and Li Lu — and delivers professional-grade research through AI Agents.
+**AI Berkshire** is a collection of investment research skills compatible with both Claude Code and Codex. It systematizes the methodologies of four value investing masters — Buffett, Munger, Duan Yongping, and Li Lu — and delivers professional-grade research through AI Agents.
 
-One person + Claude = an entire investment research team.
+One person + Claude Code / Codex = an entire investment research team.
 
 ---
 
@@ -169,7 +169,7 @@ Ask AI directly, and you have one context window. Four parallel Agents means 4×
 
 ---
 
-## Skills Overview (16 Skills)
+## Skills Overview (18 Skills)
 
 ### 🔬 Deep Research
 
@@ -195,6 +195,7 @@ Ask AI directly, and you have one context window. Four parallel Agents means 4×
 | [`/industry-research`](skills/industry-research.md) | Industry value chain scan | Map all investment opportunities across an industry's value chain |
 | [`/industry-funnel`](skills/industry-funnel.md) | Industry funnel screening | Full market → rough cut ≤10 → final pick 3, with deep analysis |
 | [`/quality-screen`](skills/quality-screen.md) | Quality screen (7 hard metrics) | Quickly eliminate non-first-class companies; supports single stock / industry / index / thematic batch screening |
+| [`/bottleneck-hunter`](skills/bottleneck-hunter.md) | Supply-chain bottleneck hunter | Start from a supertrend and find physical supply-chain bottlenecks and arbitrage opportunities |
 | [`/investment-checklist`](skills/investment-checklist.md) | Buffett pre-buy checklist | Six gates, 10-minute decision on whether to dig deeper |
 
 ### 📈 Portfolio Management
@@ -211,28 +212,71 @@ Ask AI directly, and you have one context window. Four parallel Agents means 4×
 |-------|---------|-------------|
 | [`/dyp-ask`](skills/dyp-ask.md) | Duan Yongping Q&A | Think through any question the Duan Yongping way — business, investing, life |
 | [`/financial-data`](skills/financial-data.md) | Financial data retrieval & cross-validation | Ensure key data comes from 2+ independent sources; alerts on >1% deviation |
+| [`/wechat-article`](skills/wechat-article.md) | WeChat article workflow | Author, editor, and reader Agents collaborate to produce a publishable article |
 
 ---
 
 ## Quick Start
 
-### 1. Install Claude Code
+### 1. Install an AI Client
+
+This repository keeps one canonical workflow and provides Claude Code commands plus Codex skills. Install the client you plan to use.
+
+For Claude Code users:
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
+For Codex users:
+
+```bash
+# macOS / Linux
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+
+# Or use npm
+npm install -g @openai/codex
+
+# Or use Homebrew
+brew install --cask codex
+
+# Verify installation
+codex --version
+```
+
+Windows users can use the official PowerShell installer: `powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"`.
+
+If `codex --version` prints a version, you can continue with this project's Codex skills installation.
+
 ### 2. Install Skills
 
-Copy the `.md` files from the `skills/` directory to your Claude Code commands directory:
+For Claude Code users:
 
 ```bash
 # Clone the repository
 git clone https://github.com/xbtlin/ai-berkshire.git
 
 # Copy skills to Claude Code global commands directory
-cp ai-berkshire/skills/*.md ~/.claude/commands/
+cd ai-berkshire
+./scripts/install-claude-commands.sh
 ```
+
+For Codex users:
+
+```bash
+# Clone the repository
+git clone https://github.com/xbtlin/ai-berkshire.git
+
+# Generate and install Codex skills to ~/.codex/skills
+cd ai-berkshire
+./scripts/install-codex-skills.sh
+
+# Optional: install Codex slash prompts to ~/.codex/prompts
+# for a Claude Code-like /investment-research entry point
+./scripts/install-codex-prompts.sh
+```
+
+The repository maintains three entry points: `skills/*.md` are the Claude Code command sources; `codex-skills/*/SKILL.md` are Codex skill packages generated from `skills/*.md` by `scripts/sync-codex-skills.py`; `codex-prompts/*.md` are an optional Codex slash-prompt compatibility layer.
 
 ### 3. Use
 
@@ -254,6 +298,7 @@ Invoke directly in Claude Code:
 /industry-research Nuclear Power
 /industry-funnel AI Compute
 /quality-screen Hang Seng Index Constituents
+/bottleneck-hunter AI Infrastructure
 /investment-checklist Moutai, NVIDIA, Apple
 
 # Portfolio Management
@@ -263,6 +308,23 @@ Invoke directly in Claude Code:
 
 # Thinking Tools
 /dyp-ask Where is Pinduoduo's real moat?
+/wechat-article Explain OPD for large language models
+```
+
+After installing for Codex, restart Codex and refer to skills by name, for example:
+
+```text
+Use investment-research to research Tencent
+Use earnings-review to analyze PDD 2025 annual results
+Use industry-funnel to screen AI compute
+Use bottleneck-hunter to scan AI infrastructure bottlenecks
+Use wechat-article to write an OPD explainer for large language models
+```
+
+If you install Codex slash prompts, restart Codex and search for them in the `/` menu. Codex's official custom prompt entry point usually appears as `prompts:<name>`, for example:
+
+```text
+/prompts:investment-research Tencent
 ```
 
 ---
