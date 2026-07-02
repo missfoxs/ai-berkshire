@@ -1,0 +1,17 @@
+"""A股主板"十五五"冷门潜力股筛选引擎.
+
+设计原则(见对话方案):
+  - 量化层(本包): 股票池过滤 + 全部因子计算 + 行业中性化 + 复合打分排名, 可复现可回测.
+  - 判断层(AI): 十五五主题映射 / 催化剂阅读 / 终选护城河, 不放进代码.
+  - 数据源可插拔: 统一 DataProvider 接口, 默认 AKShare, 保留 Tushare 快速替换.
+
+模块:
+  config             筛选池规则 / 因子权重 / 阈值 / 数据源选择
+  provider           DataProvider 抽象接口 + 工厂 + 标准化列名 schema
+  provider_akshare   AKShare 实现(默认)
+  provider_tushare   Tushare 实现(同签名桩, 需 token)
+  factors            纯因子函数(F-Score / 应计 / 毛利率 / 动量 ...), 无网络依赖, 可单测
+  screener           漏斗编排 + 行业中性 Z 分 + 复合排名 + 报告输出
+"""
+
+__all__ = ["config", "provider", "factors", "screener"]
