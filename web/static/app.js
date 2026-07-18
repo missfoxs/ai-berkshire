@@ -105,8 +105,44 @@ async function openReport(path) {
 }
 
 async function renderDashboard() {
-  // Task 7 实现
-  $("#content").innerHTML = `<div class="empty">仪表盘开发中</div>`;
+  CURRENT_PATH = null;
+  const d = await (await fetch("/api/dashboard")).json();
+  const maxC = d.top_companies.length ? d.top_companies[0][1] : 1;
+  const maxT = d.by_type.length ? d.by_type[0][1] : 1;
+  const maxM = Math.max(...d.by_month.map((x) => x[1]), 1);
+  $("#toc").innerHTML = "";
+  $("#content").innerHTML = `
+  <div class="dash">
+    <h2>📌 组合持仓</h2>
+    <div class="cards">${d.holdings.map((h) => `
+      <div class="hcard" data-name="${esc(h.name)}">
+        <div class="hname">${esc(h.name)}</div>
+        <div class="hcode">${esc(h.code)}</div>
+        <div class="hpct">${h.pct}%</div>
+      </div>`).join("") || "<div class='empty'>未能从 portfolio-latest.md 解析到持仓</div>"}
+    </div>
+    <h2>🕐 最近报告</h2>
+    <div class="recent">${d.recent.map(reportLink).join("")}</div>
+    <h2>📊 研究覆盖 Top 20（按公司）</h2>
+    ${d.top_companies.map(([c, n]) => bar(c, n, maxC)).join("")}
+    <h2>📁 按类型</h2>
+    ${d.by_type.map(([t, n]) => bar(t, n, maxT)).join("")}
+    <h2>📅 按月份（近12个月）</h2>
+    ${d.by_month.map(([m, n]) => bar(m, n, maxM)).join("")}
+  </div>`;
+  $("#content").scrollTop = 0;
+  $("#content").querySelectorAll(".hcard").forEach((c) => {
+    c.addEventListener("click", () => {
+      $("#search").value = c.dataset.name;
+      renderSidebar(c.dataset.name);
+    });
+  });
+}
+
+function bar(label, n, max) {
+  return `<div class="bar-row"><span class="bar-label">${esc(label)}</span>` +
+    `<span class="bar" style="width:${Math.round((n / max) * 60)}%"></span>` +
+    `<span class="bar-n">${n}</span></div>`;
 }
 
 function normalize(p) {
