@@ -8,3 +8,6 @@ reports/.DS_Store
 
 # brainstorming 可视化会话文件
 .superpowers/
+
+# Web 端本地数据（观察列表等，每个人不同）
+data/observe.json

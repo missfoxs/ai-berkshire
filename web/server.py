@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """投研报告本地浏览服务。启动：python3 web/server.py，访问 http://localhost:8600"""
+import json
 import os
 import re
 import time
@@ -10,6 +11,7 @@ from flask import Flask, abort, jsonify, request, send_file, send_from_directory
 ROOT = Path(__file__).resolve().parent.parent
 REPORTS_DIR = ROOT / "reports"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+OBSERVE_FILE = ROOT / "data" / "observe.json"
 
 app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="/static")
 
@@ -34,6 +36,20 @@ DIR_SUFFIX_RE = re.compile(r"(?:-(?:team|private|research))?-20\d{6}$|-deepseek�
 THEME_HINTS = ("对比", "轮动", "全景", "筛选", "候选池", "预测", "决策", "10年", "5年")
 
 _title_cache = {}  # abspath -> (mtime, title)
+
+
+def load_observe():
+    if not OBSERVE_FILE.exists():
+        return []
+    try:
+        return json.loads(OBSERVE_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+
+
+def save_observe(names):
+    OBSERVE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OBSERVE_FILE.write_text(json.dumps(names, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def read_title(path: Path) -> str:
@@ -79,13 +95,18 @@ def infer_date(name: str, mtime: float) -> str:
     return time.strftime("%Y-%m-%d", time.localtime(mtime))
 
 
-def classify(rel: Path, holding_names: set) -> dict:
-    """返回 {company, group}。group ∈ 持仓公司/公司/行业研究/主题对比/公众号文章/其他"""
+def classify(rel: Path, holding_names: set, observe_names: set) -> dict:
+    """返回 {company, group}。group ∈ 持仓公司/观察中/公司/行业研究/主题对比/公众号文章/其他"""
     stem = rel.stem
     lower = stem.lower()
     if len(rel.parts) > 1:
         company = DIR_SUFFIX_RE.sub("", rel.parts[0]) or rel.parts[0]
-        group = "持仓公司" if company in holding_names else "公司"
+        if company in holding_names:
+            group = "持仓公司"
+        elif company in observe_names:
+            group = "观察中"
+        else:
+            group = "公司"
         return {"company": company, "group": group}
     # 根目录散文件
     if "公众号" in stem:
@@ -97,7 +118,12 @@ def classify(rel: Path, holding_names: set) -> dict:
     first = re.split(r"[-–—]", stem)[0].strip()
     rest = stem[len(first):]
     if first and infer_type(rest) != "其他":
-        group = "持仓公司" if first in holding_names else "公司"
+        if first in holding_names:
+            group = "持仓公司"
+        elif first in observe_names:
+            group = "观察中"
+        else:
+            group = "公司"
         return {"company": first, "group": group}
     return {"company": None, "group": "其他"}
 
@@ -134,6 +160,8 @@ def parse_holdings():
 def scan_index():
     holdings = parse_holdings()
     holding_names = {h["name"] for h in holdings}
+    observe = load_observe()
+    observe_names = set(observe)
     reports = []
     for path in REPORTS_DIR.rglob("*.md"):
         rel = path.relative_to(REPORTS_DIR)
@@ -143,7 +171,7 @@ def scan_index():
             st = path.stat()
         except OSError:
             continue
-        meta = classify(rel, holding_names)
+        meta = classify(rel, holding_names, observe_names)
         reports.append(
             {
                 "path": str(rel),
@@ -155,7 +183,7 @@ def scan_index():
             }
         )
     reports.sort(key=lambda r: r["date"], reverse=True)
-    return {"reports": reports, "holdings": holdings}
+    return {"reports": reports, "holdings": holdings, "observe": observe}
 
 
 @app.route("/")
@@ -207,11 +235,43 @@ def api_dashboard():
         {
             "recent": reports[:30],
             "holdings": data["holdings"],
+            "observe": data["observe"],
             "top_companies": sorted(by_company.items(), key=lambda kv: -kv[1])[:20],
             "by_type": sorted(by_type.items(), key=lambda kv: -kv[1]),
             "by_month": sorted(by_month.items(), reverse=True)[:12],
         }
     )
+
+
+@app.route("/api/observe")
+def api_observe():
+    return jsonify(load_observe())
+
+
+@app.route("/api/observe/add", methods=["POST"])
+def api_observe_add():
+    body = request.get_json(silent=True) or {}
+    name = body.get("name", "").strip()
+    if not name:
+        abort(400)
+    names = load_observe()
+    if name not in names:
+        names.append(name)
+        save_observe(names)
+    return jsonify(names)
+
+
+@app.route("/api/observe/remove", methods=["POST"])
+def api_observe_remove():
+    body = request.get_json(silent=True) or {}
+    name = body.get("name", "").strip()
+    if not name:
+        abort(400)
+    names = load_observe()
+    if name in names:
+        names.remove(name)
+        save_observe(names)
+    return jsonify(names)
 
 
 if __name__ == "__main__":

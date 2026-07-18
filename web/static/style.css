@@ -66,3 +66,9 @@ body { margin: 0; font-family: -apple-system, "PingFang SC", "Hiragino Sans GB",
 .bar-label { width: 140px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0; }
 .bar { height: 14px; background: #54aeff; border-radius: 3px; min-width: 2px; }
 .bar-n { color: #8b949e; }
+
+/* 观察列表 */
+.observe-star { cursor: pointer; font-size: 14px; margin-right: 2px; user-select: none; }
+.observe-star:hover { color: #e6b422; }
+.observe-card { border-style: dashed; }
+.observe-card .hname { color: #e6b422; }

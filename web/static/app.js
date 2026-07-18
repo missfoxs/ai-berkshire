@@ -3,11 +3,20 @@ let INDEX = null;
 let CURRENT_PATH = null;
 
 const $ = (s) => document.querySelector(s);
-const GROUP_ORDER = ["持仓公司", "公司", "行业研究", "主题对比", "公众号文章", "其他"];
+const GROUP_ORDER = ["持仓公司", "观察中", "公司", "行业研究", "主题对比", "公众号文章", "其他"];
 
 function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+async function toggleObserve(company) {
+  const idx = (INDEX.observe || []).indexOf(company);
+  const url = idx >= 0 ? "/api/observe/remove" : "/api/observe/add";
+  const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: company }) });
+  INDEX.observe = await res.json();
+  renderSidebar($("#search").value.trim());
+  if (location.hash === "#dash") renderDashboard();
 }
 
 async function boot() {
@@ -64,12 +73,22 @@ function renderSidebar(query = "") {
       const sorted = [...companies.entries()].sort((a, b) => b[1].length - a[1].length);
       for (const [comp, reps] of sorted) {
         const open = reps.some((r) => r.path === CURRENT_PATH) ? " open" : "";
-        html += `<details${open}><summary>${esc(comp)} <span class="count">${reps.length}</span></summary>` +
+        const isObserved = INDEX.observe && INDEX.observe.includes(comp);
+        html += `<details${open}><summary>` +
+          `<span class="observe-star" data-company="${esc(comp)}" title="${isObserved ? '取消观察' : '加入观察'}">${isObserved ? '★' : '☆'}</span>` +
+          `${esc(comp)} <span class="count">${reps.length}</span></summary>` +
           reps.map(reportLink).join("") + `</details>`;
       }
     }
   }
   box.innerHTML = html;
+  box.querySelectorAll(".observe-star").forEach((star) => {
+    star.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleObserve(star.dataset.company);
+    });
+  });
   const active = box.querySelector(".report-link.active");
   if (active) active.scrollIntoView({ block: "center" });
 }
@@ -121,6 +140,12 @@ async function renderDashboard() {
         <div class="hpct">${h.pct}%</div>
       </div>`).join("") || "<div class='empty'>未能从 portfolio-latest.md 解析到持仓</div>"}
     </div>
+    <h2>👁 观察中</h2>
+    <div class="cards">${(d.observe || []).length ? d.observe.map((name) => `
+      <div class="hcard observe-card" data-name="${esc(name)}">
+        <div class="hname">${esc(name)}</div>
+      </div>`).join("") : "<div class='empty'>暂无观察对象。在侧栏公司名旁点击 ☆ 添加</div>"}
+    </div>
     <h2>🕐 最近报告</h2>
     <div class="recent">${d.recent.map(reportLink).join("")}</div>
     <h2>📊 研究覆盖 Top 20（按公司）</h2>
@@ -131,7 +156,7 @@ async function renderDashboard() {
     ${d.by_month.map(([m, n]) => bar(m, n, maxM)).join("")}
   </div>`;
   $("#content").scrollTop = 0;
-  $("#content").querySelectorAll(".hcard").forEach((c) => {
+  $("#content").querySelectorAll(".hcard,.observe-card").forEach((c) => {
     c.addEventListener("click", () => {
       $("#search").value = c.dataset.name;
       renderSidebar(c.dataset.name);
