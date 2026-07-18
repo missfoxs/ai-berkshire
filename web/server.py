@@ -103,7 +103,7 @@ def classify(rel: Path, holding_names: set) -> dict:
 
 
 HOLDING_ROW_RE = re.compile(
-    r"^\|\s*\d+\s*\|\s*\**([^|*]+?)\**\s*\|\s*([A-Za-z0-9.\-]+)\s*\|\s*([\d.]+)%"
+    r"^\|\s*\d+\s*\|\s*\**([^|*]+?)\**\s*\|\s*([A-Za-z0-9.\-]+)\s*\|\s*(\d+(?:\.\d+)?)%"
 )
 
 
