@@ -75,13 +75,73 @@ function renderSidebar(query = "") {
 }
 
 async function openReport(path) {
-  // Task 6 实现
-  $("#content").innerHTML = `<div class="empty">阅读页开发中：${esc(path)}</div>`;
+  const res = await fetch("/api/report?path=" + encodeURIComponent(path));
+  if (!res.ok) {
+    $("#content").innerHTML = `<div class="empty">加载失败（${res.status}）：${esc(path)}</div>`;
+    return;
+  }
+  const data = await res.json();
+  CURRENT_PATH = path;
+  const dir = path.includes("/") ? path.slice(0, path.lastIndexOf("/") + 1) : "";
+  const el = $("#content");
+  el.innerHTML = `<article class="report">${marked.parse(data.markdown)}</article>`;
+  el.scrollTop = 0;
+  // 相对图片走 /raw/
+  el.querySelectorAll("img").forEach((img) => {
+    const src = img.getAttribute("src") || "";
+    if (!/^(https?:|data:|\/)/.test(src)) img.src = "/raw/" + dir + src;
+  });
+  // 相对 .md 链接站内跳转；外链新窗口
+  el.querySelectorAll("a").forEach((a) => {
+    const href = a.getAttribute("href") || "";
+    if (/^(https?:)/.test(href)) {
+      a.target = "_blank";
+    } else if (href.endsWith(".md") && !href.startsWith("#")) {
+      a.href = "#r=" + encodeURIComponent(normalize(dir + decodeURIComponent(href)));
+    }
+  });
+  buildToc(el);
+  renderSidebar($("#search").value.trim());
 }
 
 async function renderDashboard() {
   // Task 7 实现
   $("#content").innerHTML = `<div class="empty">仪表盘开发中</div>`;
+}
+
+function normalize(p) {
+  const parts = [];
+  for (const seg of p.split("/")) {
+    if (seg === "" || seg === ".") continue;
+    if (seg === "..") parts.pop();
+    else parts.push(seg);
+  }
+  return parts.join("/");
+}
+
+function buildToc(contentEl) {
+  const heads = contentEl.querySelectorAll("h2, h3");
+  let html = "<div class='toc-title'>目录</div>";
+  heads.forEach((h, i) => {
+    h.id = "h-" + i;
+    html += `<a class="toc-${h.tagName.toLowerCase()}" href="#" data-target="h-${i}">${esc(h.textContent)}</a>`;
+  });
+  const cur = INDEX.reports.find((r) => r.path === CURRENT_PATH);
+  if (cur && cur.company) {
+    const others = INDEX.reports.filter((r) => r.company === cur.company && r.path !== cur.path);
+    if (others.length) {
+      html += `<div class="toc-title">「${esc(cur.company)}」其他报告（${others.length}）</div>` +
+        others.map(reportLink).join("");
+    }
+  }
+  $("#toc").innerHTML = html;
+  $("#toc").querySelectorAll("a[data-target]").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const t = document.getElementById(a.dataset.target);
+      if (t) t.scrollIntoView({ behavior: "smooth" });
+    });
+  });
 }
 
 boot();
