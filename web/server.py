@@ -168,5 +168,51 @@ def api_index():
     return jsonify(scan_index())
 
 
+def safe_path(rel: str) -> Path:
+    full = (REPORTS_DIR / rel).resolve()
+    if not str(full).startswith(str(REPORTS_DIR.resolve()) + os.sep):
+        abort(403)
+    if not full.is_file():
+        abort(404)
+    return full
+
+
+@app.route("/api/report")
+def api_report():
+    rel = request.args.get("path", "")
+    full = safe_path(rel)
+    if full.suffix != ".md":
+        abort(403)
+    return jsonify({"path": rel, "markdown": full.read_text(encoding="utf-8", errors="ignore")})
+
+
+@app.route("/raw/<path:rel>")
+def raw_file(rel):
+    """报告内引用的图片等静态资源"""
+    return send_file(safe_path(rel))
+
+
+@app.route("/api/dashboard")
+def api_dashboard():
+    data = scan_index()
+    reports = data["reports"]
+    by_company, by_type, by_month = {}, {}, {}
+    for r in reports:
+        if r["company"]:
+            by_company[r["company"]] = by_company.get(r["company"], 0) + 1
+        by_type[r["type"]] = by_type.get(r["type"], 0) + 1
+        month = r["date"][:7]
+        by_month[month] = by_month.get(month, 0) + 1
+    return jsonify(
+        {
+            "recent": reports[:30],
+            "holdings": data["holdings"],
+            "top_companies": sorted(by_company.items(), key=lambda kv: -kv[1])[:20],
+            "by_type": sorted(by_type.items(), key=lambda kv: -kv[1]),
+            "by_month": sorted(by_month.items(), reverse=True)[:12],
+        }
+    )
+
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8600)
